@@ -48,4 +48,6 @@ def stream(video_url):
 
 # Run the app if __main__ is called.
 if __name__ == '__main__':
-    app.run(port=8000)
+    host = str(input("Host: "))
+    port = int(input("Port: "))
+    app.run(host=host ,port=port)

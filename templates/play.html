@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title> ErStream </title>
+  <title>Video Streaming</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -35,15 +35,6 @@
       justify-content: center;
       align-items: center;
       margin-top: 20px;
-    }
-
-    .controls input[type="text"] {
-      width: 80px;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #cccccc;
-      border-radius: 4px;
-      margin-right: 10px;
     }
 
     .controls button {
@@ -88,10 +79,8 @@
 <body>
   <div class="container">
     <h1>Video Streaming</h1>
-    <video id="videoPlayer" controls autoplay></video>
+    <video id="videoPlayer" controls></video>
     <div class="controls">
-      <input type="text" id="seekTime" placeholder="mm:ss" />
-      <button onclick="seekToTime()">Seek</button>
       <button onclick="skipBackward(10)">-10s</button>
       <button onclick="takeSnapshot()">Take Snapshot</button>
       <button onclick="skipForward(10)">+10s</button>
@@ -104,22 +93,15 @@
 
   <script>
     const videoPlayer = document.getElementById('videoPlayer');
-    const seekTimeInput = document.getElementById('seekTime');
     const videoUrl = '{{ video_url }}';
+    const fileExtension = videoUrl.toLowerCase().split('.').pop();
 
     videoPlayer.src = '/stream/' + encodeURIComponent(videoUrl);
-    videoPlayer.type = 'video/mp4'; // Set the appropriate MIME type of your video
+    videoPlayer.type = 'video/' + (fileExtension === 'mp4' ? 'mp4' : 'x-matroska'); // Set the appropriate MIME type based on the file extension
 
     videoPlayer.addEventListener('error', (e) => {
       console.error('Video playback error:', e);
     });
-
-    function seekToTime() {
-      const time = seekTimeInput.value;
-      const [minutes, seconds] = time.split(':');
-      const totalTimeInSeconds = (parseInt(minutes) * 60) + parseInt(seconds);
-      videoPlayer.currentTime = totalTimeInSeconds;
-    }
 
     function skipBackward(seconds) {
       videoPlayer.currentTime -= seconds;
@@ -145,7 +127,7 @@
     function downloadVideo() {
       const link = document.createElement('a');
       link.href = videoPlayer.src;
-      link.download = 'video.mp4';
+      link.download = 'video.' + fileExtension;
       link.click();
     }
   </script>
