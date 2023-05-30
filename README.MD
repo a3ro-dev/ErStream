@@ -14,13 +14,13 @@ ErStream is a Flask-based web application that allows you to stream videos direc
 1. Clone the repository:
 
    ```shell
-   git clone https://github.com/your-username/erstream.git
+   git clone https://github.com/a3ro-dev/ErStream
    ```
 
 2. Navigate to the project directory:
 
    ```shell
-   cd erstream
+   cd ErStream
    ```
 
 3. Install the required dependencies. It is recommended to use a virtual environment:
@@ -35,10 +35,10 @@ ErStream is a Flask-based web application that allows you to stream videos direc
 4. Run the application:
 
    ```shell
-   python app.py
+   python main.py
    ```
 
-5. Open your browser and visit `http://localhost:5000`.
+5. Open your browser and visit `http://localhost:8000`.
 
 6. Enter the video URL in the provided form and click "Play". The video will start streaming in the web player.
 
@@ -58,7 +58,7 @@ Contributions are welcome! If you would like to contribute to ErStream, please f
 
 ## Support
 
-If you encounter any issues or have any questions or suggestions, please [open an issue](https://github.com/your-username/erstream/issues) on GitHub.
+If you encounter any issues or have any questions or suggestions, please [open an issue](https://github.com/a3ro-dev/ErStream/issues) on GitHub.
 
 ## Acknowledgments
 
