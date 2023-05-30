@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Video Streaming</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #333333;
+    }
+
+    #videoPlayer {
+      width: 100%;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .controls button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 0 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    .controls button:hover {
+      background-color: #0056b3;
+    }
+
+    .footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #999999;
+    }
+
+    .footer a {
+      color: #999999;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media only screen and (max-width: 600px) {
+      .container {
+        max-width: 90%;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Video Streaming</h1>
+    <video id="videoPlayer" controls autoplay></video>
+    <div class="controls">
+      <button onclick="skipBackward(10)">-10s</button>
+      <button onclick="takeSnapshot()">Take Snapshot</button>
+      <button onclick="skipForward(10)">+10s</button>
+      <button onclick="downloadVideo()">Download</button>
+    </div>
+    <div class="footer">
+      <p>Made with ❤️ by Aero | <a href="https://github.com/your-github-url">GitHub</a></p>
+    </div>
+  </div>
+
+  <script>
+    const videoPlayer = document.getElementById('videoPlayer');
+    const videoUrl = '{{ video_url }}';
+
+    videoPlayer.src = '/stream/' + encodeURIComponent(videoUrl);
+    videoPlayer.type = 'video/mp4'; // Set the appropriate MIME type of your video
+
+    videoPlayer.addEventListener('error', (e) => {
+      console.error('Video playback error:', e);
+    });
+
+    function skipBackward(seconds) {
+      videoPlayer.currentTime -= seconds;
+    }
+
+    function skipForward(seconds) {
+      videoPlayer.currentTime += seconds;
+    }
+
+    function takeSnapshot() {
+      const canvas = document.createElement('canvas');
+      canvas.width = videoPlayer.videoWidth;
+      canvas.height = videoPlayer.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(videoPlayer, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = 'snapshot.png';
+      link.click();
+    }
+
+    function downloadVideo() {
+      const link = document.createElement('a');
+      link.href = videoPlayer.src;
+      link.download = 'video.mp4';
+      link.click();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+ErStream/
+├── app.py
+├── templates/
+│   ├── index.html
+│   └── play.html
+├── static/
+│   └── style.css
+├── README.md
+└── requirements.txt
