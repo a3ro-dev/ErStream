@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Video Streaming</title>
+  <title> ErStream </title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -35,6 +35,15 @@
       justify-content: center;
       align-items: center;
       margin-top: 20px;
+    }
+
+    .controls input[type="text"] {
+      width: 80px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #cccccc;
+      border-radius: 4px;
+      margin-right: 10px;
     }
 
     .controls button {
@@ -81,6 +90,8 @@
     <h1>Video Streaming</h1>
     <video id="videoPlayer" controls autoplay></video>
     <div class="controls">
+      <input type="text" id="seekTime" placeholder="mm:ss" />
+      <button onclick="seekToTime()">Seek</button>
       <button onclick="skipBackward(10)">-10s</button>
       <button onclick="takeSnapshot()">Take Snapshot</button>
       <button onclick="skipForward(10)">+10s</button>
@@ -93,6 +104,7 @@
 
   <script>
     const videoPlayer = document.getElementById('videoPlayer');
+    const seekTimeInput = document.getElementById('seekTime');
     const videoUrl = '{{ video_url }}';
 
     videoPlayer.src = '/stream/' + encodeURIComponent(videoUrl);
@@ -101,6 +113,13 @@
     videoPlayer.addEventListener('error', (e) => {
       console.error('Video playback error:', e);
     });
+
+    function seekToTime() {
+      const time = seekTimeInput.value;
+      const [minutes, seconds] = time.split(':');
+      const totalTimeInSeconds = (parseInt(minutes) * 60) + parseInt(seconds);
+      videoPlayer.currentTime = totalTimeInSeconds;
+    }
 
     function skipBackward(seconds) {
       videoPlayer.currentTime -= seconds;
