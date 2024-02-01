@@ -1,25 +1,34 @@
+"""
+This is a Flask application that streams video content from a provided URL.
+
+The application has three routes:
+
+1. `/` - The index route that renders the `index.html` template.
+2. `/play` - This route accepts POST requests with a `video_url` parameter in the form data. It renders the `play.html` template with the provided `video_url`.
+3. `/stream/<path:video_url>` - This route streams the video content from the provided `video_url`. It uses the `Range` header from the request to stream the video in chunks.
+
+The application uses the `requests` library to make HTTP requests and Flask's `Response` object to stream the video content.
+
+The application is started by running the `main.py` script, which prompts the user to enter the host and port for the server.
+"""
+
 from flask import Flask, render_template, request, Response
 import requests
 
 app = Flask(__name__)
+session = requests.Session()  # Create a Session object to reuse the TCP connection
 
 @app.route('/')
 def index():
-    """
-     The index page of the web application. This is used to display the home page of the web application.
-     
-     
-     @return The template that renders the index page of the web application
-    """
+    """Render the index page."""
     return render_template('index.html')
 
 @app.route('/play', methods=['POST'])
 def play():
     """
-     View to play a video. Used by ajax calls. It is a static view and should not be accessed directly.
-     
-     
-     @return The template for play. html with the video_url
+    Render the play page with the provided video URL.
+
+    The video URL is provided in the form data of the POST request.
     """
     video_url = request.form['video_url']
     return render_template('play.html', video_url=video_url)
@@ -27,27 +36,21 @@ def play():
 @app.route('/stream/<path:video_url>')
 def stream(video_url):
     """
-     Streams a video to be played. This is a generator function that yields chunks of video data.
-     
-     @param video_url - The URL of the video to stream.
-     
-     @return A : class : ` Response ` object with the stream
+    Stream the video content from the provided URL.
+
+    The video is streamed in chunks of 1024 bytes. The `Range` header from the request is used to request specific parts of the video.
     """
     headers = {'Range': request.headers.get('Range', '')}
-    response = requests.get(video_url, headers=headers, stream=True)
+    response = session.get(video_url, headers=headers, stream=True)
 
     def generate():
-        """
-         Generator that yields chunks of response content. Useful for tests that don't need to iterate over a file
-        """
-        # Yields chunks of data from the response.
+        """Generate the video content in chunks."""
         for chunk in response.iter_content(chunk_size=1024):
             yield chunk
 
     return Response(generate(), content_type=response.headers['content-type'])
 
-# Run the app if __main__ is called.
 if __name__ == '__main__':
-    host = str(input("Host: "))
-    port = int(input("Port: "))
+    host = str(input("Host: "))  # Prompt the user to enter the host
+    port = int(input("Port: "))  # Prompt the user to enter the port
     app.run(host=host ,port=port)
